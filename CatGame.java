@@ -22,9 +22,9 @@ public class CatGame {
                 if (row != n-1) g.addEdge(new CatEdge(v, (row+1)*n + col));
                 //If even row connect down and to the left, if odd connect down and to the right
                 if (row % 2 == 0) {
-                    if (col != 0) g.addEdge(new CatEdge(v, (row+1)*n + col-1));
+                    if ((col != 0) && (row != n-1)) g.addEdge(new CatEdge(v, (row+1)*n + col-1));
                 } else {
-                    if (col != n-1) g.addEdge(new CatEdge(v, (row+1)*n + col+1));
+                    if ((col != n-1) && (row != n-1)) g.addEdge(new CatEdge(v, (row+1)*n + col+1));
                 }
                 //Connect all edges to freedom hexagon
                 if (row == 0 || row == n-1 || col == 0 || col == n-1) g.addEdge(new CatEdge(v, (n*n)));
@@ -37,16 +37,35 @@ public class CatGame {
 
         bs = n;
         markedTiles = new boolean[(n*n)+1];
+        placeRandom();
+    }
+
+    void placeRandom() {
+        int amount = (int) Math.random()*16 + 11;
+        for (int i = 0; i < amount; i++) {
+            int randRow = (int) (Math.random()*bs);
+            int randCol = (int) (Math.random()*bs);
+            if(randRow != catPos[0] && randCol != catPos[1]) killTile(randRow, randCol);
+        }
     }
 
     void markTile(int row, int col) {
+        killTile(row, col);
+        moveCat();
+    }
+
+    private void killTile(int row, int col) {
         int v = row*bs + col;
         markedTiles[v] = true;
-        int cat = catPos[0]*bs + catPos[1];
+        
         for(Edge e : g.adj(v)) {
             CatEdge ce = (CatEdge) e;
             ce.setWeight(Double.POSITIVE_INFINITY);
         }
+    }
+
+    private void moveCat() {
+        int cat = catPos[0]*bs + catPos[1];
         DijkstraUndirectedSP sp = new DijkstraUndirectedSP(g, cat);
         CatEdge next = (CatEdge) sp.pathTo(bs*bs).iterator().next();
         int nextSquare = next.other(cat);
