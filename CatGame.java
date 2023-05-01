@@ -41,16 +41,25 @@ public class CatGame {
     }
 
     void placeRandom() {
-        int amount = (int) Math.random()*16 + 11;
+        //9-13% of board covered
+        double upper = (bs*bs)*.13;
+        double lower = (bs*bs)*.09;
+        double range = upper-lower;
+        int amount = (int) (Math.random()*range + lower);
         for (int i = 0; i < amount; i++) {
             int randRow = (int) (Math.random()*bs);
             int randCol = (int) (Math.random()*bs);
-            if(randRow != catPos[0] && randCol != catPos[1]) killTile(randRow, randCol);
+            if((randRow == catPos[0] && randCol == catPos[1]) || marked(randRow, randCol)) {
+                i--;
+            } else {
+                killTile(randRow, randCol);
+            }
         }
     }
 
     void markTile(int row, int col) {
         killTile(row, col);
+        if (catIsTrapped()) return;
         moveCat();
     }
 
