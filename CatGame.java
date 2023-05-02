@@ -57,6 +57,7 @@ public class CatGame {
         }
     }
 
+    //Kills a given vertex and moves the cat 1 closer to the freedom space.
     void markTile(int row, int col) {
         killTile(row, col);
         if (catIsTrapped()) return;

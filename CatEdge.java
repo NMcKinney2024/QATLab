@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Edge;
 public class CatEdge extends Edge {
+    //New manipulatable weight.
     private double weight;
 
     public CatEdge(int v, int w, double lbs) {
@@ -12,6 +13,9 @@ public class CatEdge extends Edge {
         weight = 1;
     }
 
+    /**
+     * 
+     */
     @Override
     public double weight() {
         return weight;
